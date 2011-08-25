@@ -22,7 +22,6 @@ class Headset extends CI_Controller {
 
 	function add()
 	{
-
 		$this->form_validation->set_rules('headset_name', 'Headset Name', 'trim|required|xss_clean|callback_unique|alpha_numeric|min_length[4]|strtoupper');
 		$this->form_validation->set_rules('headset_other_name', 'Headset Other Name', 'trim|xss_clean|min_length[4]');
 		$this->form_validation->set_rules('headset_sn', 'Serial number', 'trim|xss_clean|strtoupper');

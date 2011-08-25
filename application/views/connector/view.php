@@ -1,40 +1,14 @@
-					<?php if($data['info']): ?>
-					<?php $row = $data['info']->row(); ?>
+					<?php //$row = $data['info']->row(); ?>
 					<div class="section width500" >
-						<div class="sectionHeader">Connector <?php echo $row->connector_name;?> Info</div>
+						<div class="sectionHeader">Info</div>
 						<div class="sectionBody">
-							<table width="100%" border="0" cellpadding="0" id="latestStatusTable" style="whitespace: nowrap;">
-								<tr>
-									<td id="resultName" width="30%">Connector Name</td><td><?php echo $row->connector_name; ?></td>
-								</tr>
-								<tr>
-									<td id="resultName" width="30%">Status</td>
-									<td class="ui-state-highlight">
-										<?php 
-											//get parent class
-											$class = $this->router->fetch_class();
-											//generate id format
-											$id = $this->router->fetch_class().'_id';
-											echo $this->devicestatus->get_status($this->router->fetch_class(), $row->$id);
-										?>
-									</td>
-								</tr>
-								<tr>
-									<td id="resultName" width="30%">Other Name</td><td><?php echo $row->other_name; ?></td>
-								</tr>
-								<tr>
-									<td id="resultName">Serial Number</td><td><?php echo $row->serial_number; ?></td>
-								</tr>
-								<tr>
-									<td id="resultName">Location</td><td><?php echo $row->cb_id?anchor('cubicle/view/'.$row->cb_id,$row->cb_name):""; ?></td>
-								</tr>
-								<tr>
-									<td id="resultName">Date Purchased</td><td><?php echo $row->date_purchased;?></td>
-								</tr>
-								<tr>
-									<td id="resultName">Notes</td><td><?php echo $row->notes;?></td>
-								</tr>
-							 </table>
+							<?php 
+								//get parent class
+								$class = $this->router->fetch_class();
+								//generate id format
+								$id = $this->router->fetch_class().'_id';
+								$this->deviceaction->view($this->router->fetch_class(), $this->uri->segment(3));
+							?>
 						</div>
 					</div>
 					<div class="section width700" >
@@ -46,15 +20,7 @@
 								//generate id format
 								$id = $this->router->fetch_class().'_id';
 								//generate logs.
-								$this->devicelog->generate_logs($row->$id, $class);	
+								$this->devicelog->generate_logs($this->uri->segment(3), $class);	
 							?>
 						</div>
 					</div>
-					<?php else: ?>
-					<div class="section width500" >
-						<div class="sectionHeader">Connector Info</div>
-						<div class="sectionBody">
-							Connector dont exist.
-						</div>
-					</div>
-					<?php endif; ?>

@@ -237,6 +237,7 @@ class Devicelog {
 					}
 					
 					$("#log_filter_status input").click(function(){
+						alert("test");
 						submit_data();
 					}); 
 					
@@ -478,7 +479,7 @@ class Devicelog {
 				
 				function submit_data()
 				{
-					$("#log_content#").block({ 
+					$("#log_content").block({ 
 		                message: "Please wait.....", 
 		                css: { 
 				            border: "none", 
@@ -587,7 +588,7 @@ class Devicelog {
 			}
 				
 			//format preposition to be display
-			if ($row->device == 'cubicle' || $row->process == 'add' || $row->process == 'edit') {
+			if ($row->device == 'cubicle' || $row->process == 'add' || $row->process == 'edit' || ($row->process == 'delete' && $row->cubicle_id == 0)) {
 				//ignore preposition where delete cubicle
 				$preposition = '';
 			} 

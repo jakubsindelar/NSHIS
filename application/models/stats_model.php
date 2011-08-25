@@ -116,12 +116,17 @@ class Stats_model extends CI_Model {
 		
 		
 		echo '
+			<script type="text/javascript">
+				$(document).ready(function(){
+					$(".tablesorter").tablesorter(); //make table sortable
+				});
+			</script>
 			<div class="section width700" >
 				<div class="sectionHeader">Hardware Summary</div>
 				<div class="sectionBody">
-					 <table width="100%" border="0" cellpadding="10" id="latestStatusTable">
-					 	<tr class="latestStatusTableHeader"><td>Hardware</td><td>Available</td><td>Defective</td><td>U. Repair</td><td>Missing</td><td>EOL</td><td>Deployed</td><td>Total</td></tr>
-					 	
+					 <table width="100%"  cellspacing="0" border="0" class="tablesorter">
+					 	<thead><tr><th>Hardware</th><th>Available</th><th>Defective</th><th>U. Repair</th><th>Missing</th><th>EOL</th><th>Deployed</th><th>Total</th></tr></thead>
+					 	<tbody>
 		';
 		
 		foreach ($hardwares as $hardware) {
@@ -158,7 +163,8 @@ class Stats_model extends CI_Model {
 			echo '</tr>';
 		}
 		
-		echo '
+		echo '			
+						</tbody>
 					 </table>
 				</div>
 			</div>

@@ -13,6 +13,11 @@
 		<script type="text/javascript" src="<?php echo base_url() ?>jquery/plugins/jquery.tablesorter.min.js"></script>
 		<link type="text/css" href="<?php echo base_url() ?>css/blue/style.css" rel="stylesheet" />  
 		<script type="text/javascript" src="<?php echo base_url() ?>jquery/plugins/blockui.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				$( ".datepicker" ).datepicker();
+			}); 
+		</script>
 		<style>
 			.ui-autocomplete {
 				max-height: 200px;
@@ -38,7 +43,7 @@
 			</div>
 			<div id="contentBody">
 				<div id="leftcontentBody">
-					<?php $this->load->view('pageTemplate/side-menu'); ?>
+					<?php $this->router->class == 'action' ? $this->load->view('pageTemplate/sidebar') : $this->load->view('pageTemplate/side-menu'); ?>
 				</div>
 				<div id="rightcontentBody">
 					<?php 

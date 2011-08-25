@@ -80,11 +80,11 @@ a{
 	font-weight:800;
 	height:25px;
 	padding:10px 30px 0 30px;
-	border-right:solid 1px #a80329;
-	border-left:solid 1px #a80329;
-	border-top:solid 1px #a80329;
-	background:url("images/section-header.png") no-repeat #999999;
-	color: #6F001C;
+	border-top-right-radius: 10px;
+	border-top-left-radius: 10px;
+	background-color:#999999;
+	font-family: "Lucida Console";
+	color: WHITE;
 	
 }
 #nslogo{
@@ -95,9 +95,9 @@ a{
 	font-size:12px;
 	background:#ffffff;
 	padding:10px 30px 10px 30px;
-	border-right:solid 1px #a80329;
-	border-bottom:solid 1px #a80329;
-	border-left:solid 1px #a80329;
+	border-right:solid 1px #999999;
+	border-bottom:solid 1px #999999;
+	border-left:solid 1px #999999;
 }
 ul.icons {margin: 0; padding: 0;}
 ul.icons li {margin: 2px; position: relative; padding: 4px 0; cursor: pointer; float: left;  list-style: none;}
@@ -129,7 +129,6 @@ ul.icons span.ui-icon {float: left; margin: 0 4px;}
 #latestStatusTable{
 	font-size:12px;
 	color:#646464;
-	border:#999999 solid 1px;
 }
 .latestStatusTableHeader{
 	background-color:#9CCCE2;
@@ -139,8 +138,6 @@ ul.icons span.ui-icon {float: left; margin: 0 4px;}
 }
 
 #latestStatusTable td{
-	border-left:1px solid #efefef;
-	border-right:1px solid #efefef;
 	padding:3px;
 	margin:0;
 }
@@ -151,10 +148,11 @@ ul.icons span.ui-icon {float: left; margin: 0 4px;}
 }
 
 #resultName{
-	background-color:#9CCCE2;
+	background-color:#E6EEEE;
 	font-size:14px;
 	font-weight:900;
 	color:#000000;
+	width: 30%;
 }
 
 /*view.php*/
@@ -450,7 +448,37 @@ ul.icons span.ui-icon {float: left; margin: 0 4px;}
 	font-weight: 900;
 }
 
-/* Table Styles 
+/* Info Table Styles */
+.infoTable {
+}
+	.infoTable td {
+		padding: 5px;
+		border: 1px solid #EDEDED;
+	}
+	.infoTable .highlight{
+		width: 30%;
+		background-color: #E6EEEE;
+		font-size: 14px;
+		text-align: right;
+		font-weight: 900;
+		border: 1px solid WHITE;
+	}	
+	
+	.infoTable .item-info {
+		color:#646464;
+	}
+	
+	.item-info-imp {
+		background-color: #EFD1D5;
+	}
+	
+	.highlight-imp {
+		background-color: #C2EFEF !important;
+	}
+
+
+/* Table Styles */
+/*
 #table_result {
 	border: #87CEEB 2px solid;
 }
@@ -464,3 +492,12 @@ ul.icons span.ui-icon {float: left; margin: 0 4px;}
 	}
 
 */
+#cubicle_table {
+	border-right: 0.1rem solid #DDDDDD;
+	border-top: 0.1rem solid #DDDDDD;
+}
+
+#cubicle_table td {
+	border-left: 0.1rem solid #DDDDDD;
+	border-bottom: 0.1rem solid #DDDDDD;
+}

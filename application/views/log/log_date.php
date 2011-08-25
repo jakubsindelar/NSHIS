@@ -1,8 +1,3 @@
-					<script type="text/javascript">
-						$(function() {
-							$( "#datepicker" ).datepicker();
-						});
-					</script>
 					<div class="section width500" >
 						<div class="sectionHeader">Daily Logs</div>
 						<div class="sectionBody">
@@ -13,7 +8,7 @@
 										Date:
 									</td>
 									<td width="70%">
-										<input id="datepicker" type="text" name="mdate" value="<?php echo $data['date']; ?>"> <input type="submit" name="submit_date" value="GO" />
+										<input class="datepicker" type="text" name="mdate" value="<?php echo $data['date']; ?>"> <input type="submit" name="submit_date" value="GO" />
 									</td>
 								</tr>
 								<tr>

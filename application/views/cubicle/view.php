@@ -9,7 +9,7 @@
 					<div class="section width600" >
 						<div class="sectionHeader">Cubicle <?php echo $row->name;?> Info</div>
 						<div class="sectionBody">
-							<table width="100%" border="0" cellpadding="0" id="latestStatusTable">
+							<table width="100%" border="0" cellpadding="5" cellspacing="0" id="cubicle_table">
 								<tr>
 									<td id="resultName" width="175">Cubicle Name</td><td><?php echo $row->name;?></td><td width="220">&nbsp;</td>
 								</tr>

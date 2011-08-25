@@ -49,6 +49,7 @@
 		echo '<li>'.anchor($this->uri->segment(1).'/edit/'.$this->uri->segment(3), 'Edit').'</li>';
 		if ($this->uri->segment(1) != 'cubicle')
 		{
+			/*
 			if($this->uri->segment(1) == 'usb_headset')
 			{
 				echo '<li>'.anchor($this->uri->segment(1).'/assign/'.$this->uri->segment(3), 'Assign').'</li>';
@@ -57,9 +58,9 @@
 			{
 				echo '<li>'.anchor($this->uri->segment(1).'/pullout/'.$this->uri->segment(3), 'Pullout').'</li>';
 			}
-
+			*/
 		}
-		echo '<li><a href="#" class="delete_btn" id="'.$this->uri->segment(3).'">Delete</a></li></ul>';
+		//echo '<li><a href="#" class="delete_btn" id="'.$this->uri->segment(3).'">Delete</a></li></ul>';
 		
 		echo '
 			<br /><br />
@@ -86,7 +87,6 @@
 			echo '<li>'.anchor(base_url().'people/viewall', 'View All Users').'</li>';
 			echo '<li>'.anchor(base_url().'usb_headset/viewall', 'View All USB Headsets').'</li>';
 		}
-		
 	}
 
 	?>
