@@ -103,6 +103,38 @@ class Action extends CI_Controller {
 		}
 	}
 	
+	function assign($device, $device_id)
+	{
+		//load global values
+		$this->device = $device;
+		$this->device_id = $device_id;
+		
+		//validations
+		$this->form_validation->set_rules('location', 'Location', 'trim|required|xss_clean|alpha_numeric|min_length[1]');
+		
+		if($this->form_validation->run() == FALSE)
+		{
+			//load page
+			$this->load->view('template',array('page'=>'action/assign'));
+		}
+		else
+		{
+			$location = $device == 'usb_headset' ? 'assigned_person' : 'cubicle_id';
+			$params = array(
+				$location => $this->input->post('location'),
+			);
+
+			$assign = $this->deviceaction->assign_save($this->device, $this->device_id, $params);
+			
+			if ($assign) {
+				$this->devicelog->insert_log($this->session->userdata('user_id'), $device_id, $device, 'assign', $this->input->post('location'));
+				//redirect('/action/view/'.$device.'/'.$device_id, 'refresh');
+			} else {
+				echo "Failed";
+			}
+		}
+	}
+	
 	function pullout($device, $device_id)
 	{
 		$pullout = $this->deviceaction->pullout($device, $device_id);

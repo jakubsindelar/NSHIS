@@ -451,6 +451,68 @@ class Deviceaction {
 	
 	// --------------------------------------------------------------------
 	
+	public function assign($device, $device_id)
+	{
+		//get infos of the device
+		$query = $this->CI->db->get_where('nshis_'.$device.'s', array($device.'_id' => $device_id));
+		
+		if ($query->num_rows() > 0) {
+			$info = $query->row_array();
+			
+			//generate Available Cubicle Dropdown
+			$output = array('' => '');
+			$locations = $device == 'usb_headset' ? $this->get_avail_person() : $this->get_avail_cub($device);
+			foreach ($locations->result() as $location)
+			{
+				$location_id = $device == 'usb_headset' ? $location->id : $location->cubicle_id;
+				$location_name = $device == 'usb_headset' ? $location->first_name . ' ' . $location->last_name : $location->name;
+				
+				$output[$location_id] = $location_name;
+			}
+			
+		//create table rows
+			//set table template
+			$tmpl = array (
+				'table_open' => '<table width="100%" border="0" cellspacing="0" cellpadding="10">'
+				);
+			$this->CI->table->set_template($tmpl);
+			
+			//name
+			$this->CI->table->add_row(array('data' => strtoupper($device) . ' Name'), array('data' => '<input id="name" type="text" readonly="1" value="'.$info['name'].'" readonly="1" name="device_name">'));
+			//Avaiable Cubicles
+			$this->CI->table->add_row(array('data' => 'Location'), array('data' => form_dropdown('location', $output, NULL, 'id = "location" class="ui-widget-content ui-corner-all combobox"')));
+			//submit button
+			$this->CI->table->add_row(array('data' => ''), array('data' => '<input type="submit" value="Submit" name="submit_edit">'));
+			//validation errors
+			$this->CI->table->add_row(array('data' => ''), array('data' => validation_errors()));
+			
+			echo $this->CI->table->generate();
+		}
+	}
+	
+	// --------------------------------------------------------------------
+	
+	public function assign_save($device, $device_id, $params = array())
+	{
+		$fields = array(
+			'flag_assigned' => 1
+		);
+		
+		//merge fields
+		$fields = array_merge($params, $fields);
+		
+		$update1 = $this->CI->db->update('nshis_'.$device.'s', $fields, array($device.'_id' => $device_id));
+		
+		$update2 = $this->CI->db->update('nshis_cubicles', array($device => $device_id), $params);
+		
+		if ($update1 && $update2)
+			return TRUE;
+		
+		return FALSE;
+	}	
+	
+	// --------------------------------------------------------------------
+	
 	private function get_cub_name($cub_id)
 	{
 		//skip if ZERO

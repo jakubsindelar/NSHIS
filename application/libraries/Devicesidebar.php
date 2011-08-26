@@ -36,12 +36,13 @@ class Devicesidebar {
 		//test if item exist and requested by ACTION controller
 		if ($this->CI->router->class == 'action' && $this->is_exist($device, $device_id)) {
 			//test if requested by VIEW method
-			if ($this->CI->router->method == 'view' OR $this->CI->router->method == 'edit') {
+			if ($this->CI->router->method == 'view' OR $this->CI->router->method == 'edit' OR $this->CI->router->method == 'assign') {
 				echo '<br /><br /><a href="#">ITEM</a><br />';
 				echo '<ul>';
 				echo '<li>'.anchor($device.'/view/'.$device_id, 'Info').'</li>';
 				echo '<li>'.anchor($device.'/edit/'.$device_id, 'Edit').'</li>';
 				echo $this->is_assigned() == 1 && $device != 'usb_headset' ? '<li>'.anchor('action/pullout/'.$device.'/'.$device_id, 'Pullout').'</li>' : '';
+				echo $this->is_assigned() == 0 && $device != 'usb_headset' ? '<li>'.anchor('action/assign/'.$device.'/'.$device_id, 'Assign').'</li>' : '';
 				echo $this->is_assigned() == 1 && $device == 'usb_headset' ? '<li>'.anchor('usb_headset/unassign/'.$device_id, 'Unassign').'</li>' : '';
 				echo $this->is_assigned() == 0 && $device == 'usb_headset' ? '<li>'.anchor('usb_headset/assign/'.$device_id, 'Assign').'</li>' : '';
 				echo $device != 'cubicle' ? '<li><a href="#" class="delete_btn" id="'.$device_id.'">Delete</a></li></ul>' : '';
