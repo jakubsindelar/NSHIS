@@ -1,0 +1,1105 @@
+1314988138TS---><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<title>Northstar Solutions - Hardware Inventory System</title>
+		<link type="text/css" href="http://localhost/NSHIS/css/style2.css" rel="stylesheet" /> 
+		<link type="text/css" href="http://localhost/NSHIS/calendar/cwcalendar.css" rel="stylesheet" />
+		<script type="text/javascript" src="http://localhost/NSHIS/calendar/calendar.js"></script>
+		<script type="text/javascript" src="http://localhost/NSHIS/jquery/jquery-ui/js/jquery-1.6.1.min.js"></script>
+		<script type="text/javascript" src="http://localhost/NSHIS/jquery/jquery-ui/js/jquery-ui-1.8.14.custom.min.js"></script>
+		<link type="text/css" href="http://localhost/NSHIS/jquery/jquery-ui/css/custom-theme/jquery-ui-1.8.14.custom.css" rel="stylesheet" />  
+		<script type="text/javascript" src="http://localhost/NSHIS/jquery/plugins/jquery.autogrowtextarea.js"></script>
+		<script type="text/javascript" src="http://localhost/NSHIS/jquery/plugins/ambet.autocomplete.js"></script>
+		<script type="text/javascript" src="http://localhost/NSHIS/jquery/plugins/jquery.tablesorter.min.js"></script>
+		<link type="text/css" href="http://localhost/NSHIS/css/blue/style.css" rel="stylesheet" />  
+		<script type="text/javascript" src="http://localhost/NSHIS/jquery/plugins/blockui.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				$( ".datepicker" ).datepicker();
+			}); 
+		</script>
+		<style>
+			.ui-autocomplete {
+				max-height: 200px;
+				overflow-y: auto;
+				overflow-x: hidden;
+				padding-right: 20px;
+				width: 170px;
+			}
+			
+			.ui-autocomplete li {
+				margin-bottom: 4px;
+			}
+			
+			.ui-autocomplete-loading {
+				background: white url('http://localhost/NSHIS/css/images/ui-anim_basic_16x16.gif') right center no-repeat;
+			}
+		</style>
+</head>
+	<body>
+		<div id="content">
+			<div id="contentHeader">
+				<div id="logoContentHeader">
+	<div id="nslogo"></div>
+	<div id="titleText">NSHIS v1.5.0</div>
+</div>
+<div id="menuContentHeader">
+	<div class="menu">
+		<ul>
+			<li><a href="http://localhost/NSHIS/">Home</a></li>
+			<li><a href="#">Add</a>
+				<ul>
+					<li><a href="http://localhost/NSHIS/cubicle/add">Cubicle</a></li>
+					<li><a href="http://localhost/NSHIS/cpu/add">CPU</a></li>
+					<li><a href="http://localhost/NSHIS/keyboard/add">Keyboard</a></li>
+					<li><a href="http://localhost/NSHIS/mouse/add">Mouse</a></li>
+					<li><a href="http://localhost/NSHIS/monitor/add">Monitor</a></li>
+					<li><a href="http://localhost/NSHIS/dialpad/add">Dial Pad</a></li>
+					<li><a href="http://localhost/NSHIS/connector/add">Connector</a></li>
+					<li><a href="http://localhost/NSHIS/headset/add">Headset(Analog)</a>
+					</li>
+					<li><a href="http://localhost/NSHIS/usb_headset/add">Headset(USB)</a>
+					</li>
+					<li><a href="http://localhost/NSHIS/ups/add">UPS</a></li>
+				</ul>
+			</li>
+			<li><a href="#">View All</a>
+				<ul>
+					<li><a href="http://localhost/NSHIS/cubicle/viewall">Cubicle</a></li>
+					<li><a href="http://localhost/NSHIS/cpu/viewall">CPU</a></li>
+					<li><a href="http://localhost/NSHIS/keyboard/viewall">Keyboard</a>
+					</li>
+					<li><a href="http://localhost/NSHIS/mouse/viewall">Mouse</a></li>
+					<li><a href="http://localhost/NSHIS/monitor/viewall">Monitor</a></li>
+					<li><a href="http://localhost/NSHIS/dialpad/viewall">Dial Pad</a>
+					</li>
+					<li><a href="http://localhost/NSHIS/connector/viewall">Connector</a>
+					</li>
+					<li><a href="http://localhost/NSHIS/headset/viewall">Headset(Analog)</a>
+					</li>
+					<li><a href="http://localhost/NSHIS/usb_headset/viewall">Headset(USB)</a>
+					</li>
+					<li><a href="http://localhost/NSHIS/ups/viewall">UPS</a></li>
+				</ul>
+			</li>
+			<li><a href="http://localhost/NSHIS/user/logout/">Logout</a></li>
+		</ul>
+	</div>
+</div>
+			</div>
+			<div id="contentBody">
+				<div id="leftcontentBody">
+					
+			<script type="text/javascript">
+				$(function() {
+					var base_url = "http://localhost/NSHIS/";
+					var device = "headset";
+					var device_id = "";
+					$(".delete_btn").click(function(){
+						$( "#dialog-confirm" ).dialog("open");
+					});
+			
+					$( "#dialog-confirm" ).dialog({
+						autoOpen: false,
+						resizable: false,
+						height:140,
+						modal: true,
+						buttons: {
+							"Delete this item?": function() {
+								$( this ).dialog( "close" );
+								show_saving();
+								$.post(base_url + "action/delete/" + device + "/" + device_id,{my_device_id : device_id},
+									function(data) {
+										$.unblockUI;
+										window.location = base_url + device + "/viewall";
+									}
+								);
+							},
+							Cancel: function() {
+								$( this ).dialog( "close" );
+							}
+						}
+					});
+					
+					function show_saving(){
+						$.blockUI({ css: { 
+				            border: "none", 
+				            padding: "15px", 
+				            backgroundColor: "#000", 
+				            "-webkit-border-radius": "10px", 
+				            "-moz-border-radius": "10px", 
+				            opacity: .5, 
+				            color: "#fff"
+				       		},
+				       		message: "<h1>Processing</h1>" 
+						}); 
+					}
+					
+				});
+			</script>
+		<div id="menu7">
+			<a href="#">QUICK LINKS</a><br />
+			<ul>
+				<li><a href="http://localhost/NSHIS/log/daily">Daily Item Logs</a></li>
+				<li><a href="http://localhost/NSHIS/log/user">User Logs</a></li>
+				<li><a href="http://localhost/NSHIS/search">Search Item</a></li>
+				<li><a href="http://localhost/NSHIS/cubicle/viewall">View All Cubicles</a></li>
+			</ul>
+		</div>				</div>
+				<div id="rightcontentBody">
+										<div class="section width500" >
+						<div class="sectionHeader">View All HEADSET</div>
+						<div class="sectionBody">
+							
+			<script type="text/javascript">
+				$(document).ready(function(){ 
+					//vars
+					var base_url = "http://localhost/NSHIS/";
+		$("#table_result").tablesorter(); //make table sortable	
+		        	//make assign links to be like buttons 
+		        	$(".btnAssign").button();
+
+					//show pop-up when assign button was clicked
+		        	$(".btnAssign").click(function(){
+		        		$( "#dialog-form" )
+		        			.data("id", this.id)
+		        			.dialog( "open" );
+	        			return false;
+			        });
+
+			        //init dialog box
+		        	$( "#dialog-form" ).dialog({
+						autoOpen: false,
+						height: 130,
+						width: 250,
+						modal: true,
+						buttons: {
+							"Assign": function() {
+								item_info = $(this).data("id").split("_");
+								$( this ).dialog( "close" );
+								if ($.trim($( "#location" ).val()).length > 0) {
+									show_saving();
+									$.post(base_url + "ajax/assign_item", {
+										item : item_info[0],
+										item_id : item_info[1],
+										location_id : $( "#location" ).val()
+									}, function(data) {
+										$.unblockUI;
+										window.location.reload(true);
+									});
+								} else {
+									alert("Location Field is required");
+								}
+							},
+							Cancel: function() {
+								$( this ).dialog( "close" );
+							}
+						}
+					});
+
+					//modal
+		        	function show_saving(){
+						$.blockUI({ css: { 
+				            border: "none", 
+				            padding: "15px", 
+				            backgroundColor: "#000", 
+				            "-webkit-border-radius": "10px", 
+				            "-moz-border-radius": "10px", 
+				            opacity: .5, 
+				            color: "#fff"
+				       		},
+				       		message: "<h1>Processing</h1>" 
+						}); 
+					}
+			    }); 
+			</script>
+		<table width="100%" border="0" cellspacing="0" id="table_result" class="tablesorter">
+<thead>
+<tr>
+<th>Name</th><th>Status</th><th>Cubicle</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/251">HST000002</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_251">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/250">HST000003</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_250">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/249">HST000004</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_249">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/248">HST000005</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_248">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/247">HST000006</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_247">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/246">HST000007</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_246">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/245">HST000008</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_245">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/244">HST000009</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_244">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/243">HST000010</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_243">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/242">HST000011</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_242">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/241">HST000012</a></td><td>OK</td><td><a href="http://localhost/NSHIS/cubicle/view/141">CUB000221</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/240">HST000013</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_240">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/239">HST000014</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_239">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/238">HST000015</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_238">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/237">HST000016</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_237">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/236">HST000017</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_236">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/235">HST000018</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_235">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/234">HST000019</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_234">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/233">HST000020</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_233">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/232">HST000021</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_232">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/231">HST000022</a></td><td>OK</td><td><a href="http://localhost/NSHIS/cubicle/view/358">CUB000004</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/230">HST000023</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_230">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/229">HST000024</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_229">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/228">HST000025</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_228">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/227">HST000026</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_227">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/226">HST000027</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_226">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/225">HST000028</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_225">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/224">HST000029</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_224">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/223">HST000030</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_223">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/222">HST000031</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_222">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/221">HST000032</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_221">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/220">HST000033</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_220">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/219">HST000034</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_219">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/218">HST000035</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_218">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/217">HST000036</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_217">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/216">HST000037</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_216">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/215">HST000038</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_215">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/214">HST000039</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_214">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/213">HST000040</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_213">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/212">HST000041</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_212">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/211">HST000042</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_211">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/210">HST000043</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_210">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/209">HST000044</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_209">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/208">HST000045</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_208">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/207">HST000046</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_207">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/206">HST000047</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_206">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/205">HST000048</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_205">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/204">HST000049</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_204">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/203">HST000050</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_203">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/202">HST000051</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_202">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/201">HST000052</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_201">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/200">HST000053</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_200">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/199">HST000054</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_199">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/198">HST000055</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_198">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/197">HST000056</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_197">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/196">HST000057</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_196">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/195">HST000058</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_195">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/194">HST000059</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_194">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/193">HST000060</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_193">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/192">HST000061</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_192">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/191">HST000062</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_191">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/190">HST000063</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_190">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/189">HST000064</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_189">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/188">HST000065</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_188">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/187">HST000066</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_187">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/186">HST000067</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_186">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/185">HST000068</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_185">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/184">HST000069</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_184">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/183">HST000070</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_183">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/182">HST000071</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_182">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/181">HST000072</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_181">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/180">HST000073</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_180">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/179">HST000074</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_179">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/178">HST000075</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_178">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/177">HST000076</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_177">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/176">HST000077</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_176">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/175">HST000078</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_175">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/174">HST000079</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_174">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/173">HST000080</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_173">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/172">HST000081</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_172">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/171">HST000082</a></td><td>OK</td><td><a href="http://localhost/NSHIS/cubicle/view/360">CUB000002</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/170">HST000083</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_170">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/169">HST000084</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_169">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/168">HST000085</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_168">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/167">HST000086</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_167">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/166">HST000087</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_166">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/165">HST000088</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_165">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/164">HST000089</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_164">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/163">HST000090</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_163">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/162">HST000091</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_162">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/161">HST000092</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_161">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/160">HST000093</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_160">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/159">HST000094</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_159">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/158">HST000095</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_158">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/157">HST000096</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_157">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/156">HST000097</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_156">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/155">HST000098</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_155">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/154">HST000099</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_154">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/153">HST000100</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_153">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/152">HST000101</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_152">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/151">HST000102</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_151">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/150">HST000103</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_150">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/149">HST000104</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_149">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/148">HST000105</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_148">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/147">HST000106</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_147">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/146">HST000107</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_146">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/145">HST000108</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_145">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/144">HST000109</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_144">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/143">HST000110</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_143">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/142">HST000111</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_142">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/141">HST000112</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_141">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/140">HST000113</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_140">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/139">HST000114</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_139">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/138">HST000115</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_138">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/137">HST000116</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_137">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/136">HST000117</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_136">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/135">HST000118</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_135">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/134">HST000119</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_134">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/133">HST000120</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_133">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/132">HST000121</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_132">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/131">HST000122</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_131">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/130">HST000123</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_130">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/129">HST000124</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_129">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/128">HST000125</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_128">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/127">HST000126</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_127">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/126">HST000127</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_126">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/125">HST000128</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_125">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/124">HST000129</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_124">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/123">HST000130</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_123">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/122">HST000131</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_122">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/121">HST000132</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_121">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/120">HST000133</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_120">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/119">HST000134</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_119">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/118">HST000135</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_118">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/117">HST000136</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_117">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/116">HST000137</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_116">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/115">HST000138</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_115">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/114">HST000139</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_114">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/113">HST000140</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_113">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/112">HST000141</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_112">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/111">HST000142</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_111">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/110">HST000143</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_110">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/109">HST000144</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_109">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/108">HST000145</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_108">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/107">HST000146</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_107">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/106">HST000147</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_106">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/105">HST000148</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_105">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/104">HST000149</a></td><td>OK</td><td><a href="http://localhost/NSHIS/cubicle/view/359">CUB000003</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/103">HST000150</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_103">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/102">HST000151</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_102">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/101">HST000152</a></td><td>OK</td><td><a href="http://localhost/NSHIS/cubicle/view/361">CUB000001</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/100">HST000153</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_100">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/99">HST000154</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_99">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/98">HST000155</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_98">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/97">HST000156</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_97">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/96">HST000157</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_96">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/95">HST000158</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_95">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/94">HST000159</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_94">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/93">HST000160</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_93">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/92">HST000161</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_92">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/91">HST000162</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_91">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/90">HST000163</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_90">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/89">HST000164</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_89">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/88">HST000165</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_88">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/87">HST000166</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_87">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/86">HST000167</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_86">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/85">HST000168</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_85">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/84">HST000169</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_84">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/83">HST000170</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_83">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/82">HST000171</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_82">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/81">HST000172</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_81">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/80">HST000173</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_80">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/79">HST000174</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_79">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/78">HST000175</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_78">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/77">HST000176</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_77">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/76">HST000177</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_76">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/75">HST000178</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_75">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/74">HST000179</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_74">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/73">HST000180</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_73">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/72">HST000181</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_72">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/71">HST000182</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_71">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/70">HST000183</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_70">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/69">HST000184</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_69">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/68">HST000185</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_68">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/67">HST000186</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_67">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/66">HST000187</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_66">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/65">HST000188</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_65">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/64">HST000189</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_64">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/63">HST000190</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_63">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/62">HST000191</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_62">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/61">HST000192</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_61">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/60">HST000193</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_60">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/59">HST000194</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_59">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/58">HST000195</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_58">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/57">HST000196</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_57">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/56">HST000197</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_56">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/55">HST000198</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_55">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/54">HST000199</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_54">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/53">HST000200</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_53">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/52">HST000201</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_52">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/51">HST000202</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_51">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/50">HST000203</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_50">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/49">HST000204</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_49">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/48">HST000205</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_48">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/47">HST000206</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_47">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/46">HST000207</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_46">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/45">HST000208</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_45">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/44">HST000209</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_44">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/43">HST000210</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_43">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/42">HST000211</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_42">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/41">HST000212</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_41">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/40">HST000213</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_40">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/39">HST000214</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_39">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/38">HST000215</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_38">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/37">HST000216</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_37">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/36">HST000217</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_36">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/35">HST000218</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_35">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/34">HST000219</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_34">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/33">HST000220</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_33">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/32">HST000221</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_32">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/31">HST000222</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_31">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/30">HST000223</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_30">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/29">HST000224</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_29">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/28">HST000225</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_28">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/27">HST000226</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_27">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/26">HST000227</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_26">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/25">HST000228</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_25">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/24">HST000229</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_24">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/23">HST000230</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_23">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/22">HST000231</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_22">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/21">HST000232</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_21">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/20">HST000233</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_20">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/19">HST000234</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_19">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/18">HST000235</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_18">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/17">HST000236</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_17">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/16">HST000237</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_16">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/15">HST000238</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_15">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/14">HST000239</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_14">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/13">HST000240</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_13">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/12">HST000241</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_12">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/11">HST000242</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_11">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/10">HST000243</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_10">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/9">HST000244</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_9">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/8">HST000245</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_8">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/7">HST000246</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_7">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/6">HST000247</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_6">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/5">HST000248</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_5">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/4">HST000249</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_4">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/3">HST000250</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_3">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/2">HST000251</a></td><td>OK</td><td><a href="http://localhost/NSHIS/" title="Assign cubicle" class="btnAssign" id="headset_2">assign</a></td></tr>
+<tr>
+<td><a href="http://localhost/NSHIS/headset/view/1">HST000252</a></td><td>OK</td><td><a href="http://localhost/NSHIS/cubicle/view/355">CUB000007</a></td></tr>
+</tbody>
+</table>
+			<div id="dialog-form" title="Assign item">
+				<form>
+					<table>
+						<tr>
+							<td>Location</td>
+							<td><select name="location" id = "location" class="ui-widget-content ui-corner-all combobox">
+<option value="4">CUB000358</option>
+<option value="3">CUB000359</option>
+<option value="5">CUB000357</option>
+<option value="6">CUB000356</option>
+<option value="7">CUB000355</option>
+<option value="8">CUB000354</option>
+<option value="9">CUB000353</option>
+<option value="10">CUB000352</option>
+<option value="11">CUB000351</option>
+<option value="12">CUB000350</option>
+<option value="13">CUB000349</option>
+<option value="14">CUB000348</option>
+<option value="15">CUB000347</option>
+<option value="16">CUB000346</option>
+<option value="17">CUB000345</option>
+<option value="18">CUB000344</option>
+<option value="19">CUB000343</option>
+<option value="20">CUB000342</option>
+<option value="21">CUB000341</option>
+<option value="22">CUB000340</option>
+<option value="23">CUB000339</option>
+<option value="24">CUB000338</option>
+<option value="25">CUB000337</option>
+<option value="26">CUB000336</option>
+<option value="27">CUB000335</option>
+<option value="28">CUB000334</option>
+<option value="29">CUB000333</option>
+<option value="30">CUB000332</option>
+<option value="31">CUB000331</option>
+<option value="32">CUB000330</option>
+<option value="33">CUB000329</option>
+<option value="34">CUB000328</option>
+<option value="35">CUB000327</option>
+<option value="36">CUB000326</option>
+<option value="37">CUB000325</option>
+<option value="38">CUB000324</option>
+<option value="39">CUB000323</option>
+<option value="40">CUB000322</option>
+<option value="41">CUB000321</option>
+<option value="42">CUB000320</option>
+<option value="43">CUB000319</option>
+<option value="44">CUB000318</option>
+<option value="45">CUB000317</option>
+<option value="46">CUB000316</option>
+<option value="47">CUB000315</option>
+<option value="48">CUB000314</option>
+<option value="49">CUB000313</option>
+<option value="50">CUB000312</option>
+<option value="51">CUB000311</option>
+<option value="52">CUB000310</option>
+<option value="53">CUB000309</option>
+<option value="54">CUB000308</option>
+<option value="55">CUB000307</option>
+<option value="56">CUB000306</option>
+<option value="57">CUB000305</option>
+<option value="58">CUB000304</option>
+<option value="59">CUB000303</option>
+<option value="60">CUB000302</option>
+<option value="61">CUB000301</option>
+<option value="62">CUB000300</option>
+<option value="63">CUB000299</option>
+<option value="64">CUB000298</option>
+<option value="65">CUB000297</option>
+<option value="66">CUB000296</option>
+<option value="67">CUB000295</option>
+<option value="68">CUB000294</option>
+<option value="69">CUB000293</option>
+<option value="70">CUB000292</option>
+<option value="71">CUB000291</option>
+<option value="72">CUB000290</option>
+<option value="73">CUB000289</option>
+<option value="74">CUB000288</option>
+<option value="75">CUB000287</option>
+<option value="76">CUB000286</option>
+<option value="77">CUB000285</option>
+<option value="78">CUB000284</option>
+<option value="79">CUB000283</option>
+<option value="80">CUB000282</option>
+<option value="81">CUB000281</option>
+<option value="82">CUB000280</option>
+<option value="83">CUB000279</option>
+<option value="84">CUB000278</option>
+<option value="85">CUB000277</option>
+<option value="86">CUB000276</option>
+<option value="87">CUB000275</option>
+<option value="88">CUB000274</option>
+<option value="89">CUB000273</option>
+<option value="90">CUB000272</option>
+<option value="91">CUB000271</option>
+<option value="92">CUB000270</option>
+<option value="93">CUB000269</option>
+<option value="94">CUB000268</option>
+<option value="95">CUB000267</option>
+<option value="96">CUB000266</option>
+<option value="97">CUB000265</option>
+<option value="98">CUB000264</option>
+<option value="99">CUB000263</option>
+<option value="100">CUB000262</option>
+<option value="101">CUB000261</option>
+<option value="102">CUB000260</option>
+<option value="103">CUB000259</option>
+<option value="104">CUB000258</option>
+<option value="105">CUB000257</option>
+<option value="106">CUB000256</option>
+<option value="107">CUB000255</option>
+<option value="108">CUB000254</option>
+<option value="109">CUB000253</option>
+<option value="110">CUB000252</option>
+<option value="111">CUB000251</option>
+<option value="112">CUB000250</option>
+<option value="113">CUB000249</option>
+<option value="114">CUB000248</option>
+<option value="115">CUB000247</option>
+<option value="116">CUB000246</option>
+<option value="117">CUB000245</option>
+<option value="118">CUB000244</option>
+<option value="119">CUB000243</option>
+<option value="120">CUB000242</option>
+<option value="121">CUB000241</option>
+<option value="122">CUB000240</option>
+<option value="123">CUB000239</option>
+<option value="124">CUB000238</option>
+<option value="125">CUB000237</option>
+<option value="126">CUB000236</option>
+<option value="127">CUB000235</option>
+<option value="128">CUB000234</option>
+<option value="129">CUB000233</option>
+<option value="130">CUB000232</option>
+<option value="131">CUB000231</option>
+<option value="132">CUB000230</option>
+<option value="133">CUB000229</option>
+<option value="134">CUB000228</option>
+<option value="135">CUB000227</option>
+<option value="136">CUB000226</option>
+<option value="137">CUB000225</option>
+<option value="138">CUB000224</option>
+<option value="139">CUB000223</option>
+<option value="140">CUB000222</option>
+<option value="142">CUB000220</option>
+<option value="143">CUB000219</option>
+<option value="144">CUB000218</option>
+<option value="145">CUB000217</option>
+<option value="146">CUB000216</option>
+<option value="147">CUB000215</option>
+<option value="148">CUB000214</option>
+<option value="149">CUB000213</option>
+<option value="150">CUB000212</option>
+<option value="151">CUB000211</option>
+<option value="152">CUB000210</option>
+<option value="153">CUB000209</option>
+<option value="154">CUB000208</option>
+<option value="155">CUB000207</option>
+<option value="156">CUB000206</option>
+<option value="157">CUB000205</option>
+<option value="158">CUB000204</option>
+<option value="159">CUB000203</option>
+<option value="160">CUB000202</option>
+<option value="161">CUB000201</option>
+<option value="162">CUB000200</option>
+<option value="163">CUB000199</option>
+<option value="164">CUB000198</option>
+<option value="165">CUB000197</option>
+<option value="166">CUB000196</option>
+<option value="167">CUB000195</option>
+<option value="168">CUB000194</option>
+<option value="169">CUB000193</option>
+<option value="170">CUB000192</option>
+<option value="171">CUB000191</option>
+<option value="172">CUB000190</option>
+<option value="173">CUB000189</option>
+<option value="174">CUB000188</option>
+<option value="175">CUB000187</option>
+<option value="176">CUB000186</option>
+<option value="177">CUB000185</option>
+<option value="178">CUB000184</option>
+<option value="179">CUB000183</option>
+<option value="180">CUB000182</option>
+<option value="181">CUB000181</option>
+<option value="182">CUB000180</option>
+<option value="183">CUB000179</option>
+<option value="184">CUB000178</option>
+<option value="185">CUB000177</option>
+<option value="186">CUB000176</option>
+<option value="187">CUB000175</option>
+<option value="188">CUB000174</option>
+<option value="189">CUB000173</option>
+<option value="190">CUB000172</option>
+<option value="191">CUB000171</option>
+<option value="192">CUB000170</option>
+<option value="193">CUB000169</option>
+<option value="194">CUB000168</option>
+<option value="195">CUB000167</option>
+<option value="196">CUB000166</option>
+<option value="197">CUB000165</option>
+<option value="198">CUB000164</option>
+<option value="199">CUB000163</option>
+<option value="200">CUB000162</option>
+<option value="201">CUB000161</option>
+<option value="202">CUB000160</option>
+<option value="203">CUB000159</option>
+<option value="204">CUB000158</option>
+<option value="205">CUB000157</option>
+<option value="206">CUB000156</option>
+<option value="207">CUB000155</option>
+<option value="208">CUB000154</option>
+<option value="209">CUB000153</option>
+<option value="210">CUB000152</option>
+<option value="211">CUB000151</option>
+<option value="212">CUB000150</option>
+<option value="213">CUB000149</option>
+<option value="214">CUB000148</option>
+<option value="215">CUB000147</option>
+<option value="216">CUB000146</option>
+<option value="217">CUB000145</option>
+<option value="218">CUB000144</option>
+<option value="219">CUB000143</option>
+<option value="220">CUB000142</option>
+<option value="221">CUB000141</option>
+<option value="222">CUB000140</option>
+<option value="223">CUB000139</option>
+<option value="224">CUB000138</option>
+<option value="225">CUB000137</option>
+<option value="226">CUB000136</option>
+<option value="227">CUB000135</option>
+<option value="228">CUB000134</option>
+<option value="229">CUB000133</option>
+<option value="230">CUB000132</option>
+<option value="231">CUB000131</option>
+<option value="232">CUB000130</option>
+<option value="233">CUB000129</option>
+<option value="234">CUB000128</option>
+<option value="235">CUB000127</option>
+<option value="236">CUB000126</option>
+<option value="237">CUB000125</option>
+<option value="238">CUB000124</option>
+<option value="239">CUB000123</option>
+<option value="240">CUB000122</option>
+<option value="241">CUB000121</option>
+<option value="242">CUB000120</option>
+<option value="243">CUB000119</option>
+<option value="244">CUB000118</option>
+<option value="245">CUB000117</option>
+<option value="246">CUB000116</option>
+<option value="247">CUB000115</option>
+<option value="248">CUB000114</option>
+<option value="249">CUB000113</option>
+<option value="250">CUB000112</option>
+<option value="251">CUB000111</option>
+<option value="252">CUB000110</option>
+<option value="253">CUB000109</option>
+<option value="254">CUB000108</option>
+<option value="255">CUB000107</option>
+<option value="256">CUB000106</option>
+<option value="257">CUB000105</option>
+<option value="258">CUB000104</option>
+<option value="259">CUB000103</option>
+<option value="260">CUB000102</option>
+<option value="261">CUB000101</option>
+<option value="262">CUB000100</option>
+<option value="263">CUB000099</option>
+<option value="264">CUB000098</option>
+<option value="265">CUB000097</option>
+<option value="266">CUB000096</option>
+<option value="267">CUB000095</option>
+<option value="268">CUB000094</option>
+<option value="269">CUB000093</option>
+<option value="270">CUB000092</option>
+<option value="271">CUB000091</option>
+<option value="272">CUB000090</option>
+<option value="273">CUB000089</option>
+<option value="274">CUB000088</option>
+<option value="275">CUB000087</option>
+<option value="276">CUB000086</option>
+<option value="277">CUB000085</option>
+<option value="278">CUB000084</option>
+<option value="279">CUB000083</option>
+<option value="280">CUB000082</option>
+<option value="281">CUB000081</option>
+<option value="282">CUB000080</option>
+<option value="283">CUB000079</option>
+<option value="284">CUB000078</option>
+<option value="285">CUB000077</option>
+<option value="286">CUB000076</option>
+<option value="287">CUB000075</option>
+<option value="288">CUB000074</option>
+<option value="289">CUB000073</option>
+<option value="290">CUB000072</option>
+<option value="291">CUB000071</option>
+<option value="292">CUB000070</option>
+<option value="293">CUB000069</option>
+<option value="294">CUB000068</option>
+<option value="295">CUB000067</option>
+<option value="296">CUB000066</option>
+<option value="297">CUB000065</option>
+<option value="298">CUB000064</option>
+<option value="299">CUB000063</option>
+<option value="300">CUB000062</option>
+<option value="301">CUB000061</option>
+<option value="302">CUB000060</option>
+<option value="303">CUB000059</option>
+<option value="304">CUB000058</option>
+<option value="305">CUB000057</option>
+<option value="306">CUB000056</option>
+<option value="307">CUB000055</option>
+<option value="308">CUB000054</option>
+<option value="309">CUB000053</option>
+<option value="310">CUB000052</option>
+<option value="311">CUB000051</option>
+<option value="312">CUB000050</option>
+<option value="313">CUB000049</option>
+<option value="314">CUB000048</option>
+<option value="315">CUB000047</option>
+<option value="316">CUB000046</option>
+<option value="317">CUB000045</option>
+<option value="318">CUB000044</option>
+<option value="319">CUB000043</option>
+<option value="320">CUB000042</option>
+<option value="321">CUB000041</option>
+<option value="322">CUB000040</option>
+<option value="323">CUB000039</option>
+<option value="324">CUB000038</option>
+<option value="325">CUB000037</option>
+<option value="326">CUB000036</option>
+<option value="327">CUB000035</option>
+<option value="328">CUB000034</option>
+<option value="329">CUB000033</option>
+<option value="330">CUB000032</option>
+<option value="331">CUB000031</option>
+<option value="332">CUB000030</option>
+<option value="333">CUB000029</option>
+<option value="334">CUB000028</option>
+<option value="335">CUB000027</option>
+<option value="336">CUB000026</option>
+<option value="337">CUB000025</option>
+<option value="338">CUB000024</option>
+<option value="339">CUB000023</option>
+<option value="340">CUB000022</option>
+<option value="341">CUB000021</option>
+<option value="342">CUB000020</option>
+<option value="343">CUB000019</option>
+<option value="344">CUB000018</option>
+<option value="345">CUB000017</option>
+<option value="346">CUB000016</option>
+<option value="347">CUB000015</option>
+<option value="348">CUB000014</option>
+<option value="349">CUB000013</option>
+<option value="350">CUB000012</option>
+<option value="351">CUB000011</option>
+<option value="352">CUB000010</option>
+<option value="353">CUB000009</option>
+<option value="354">CUB000008</option>
+<option value="356">CUB000006</option>
+<option value="357">CUB000005</option>
+<option value="365">CUB000666B</option>
+<option value="367">CUB000666</option>
+<option value="368">CUB000666AB</option>
+</select></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+								</div>
+					</div>				</div>
+			</div>
+			<div id="contentFooter">
+								<div id="thinStripe"></div>
+				<div id="copyright">Copyright 2010. NorthStar Solutions. All Rights Reserved.</div>
+			</div>
+		</div>
+		<div id="dialog-confirm" title="Delete Item">
+			<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>These item will be permanently deleted and cannot be undone. Are you sure?</p>
+		</div>
+	</body>
+</html>

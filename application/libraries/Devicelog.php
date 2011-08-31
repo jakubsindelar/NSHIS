@@ -55,7 +55,7 @@ class Devicelog {
 		$this->filter_type = $filter_type;
 		//$this->date_filter = $date_filter;
 		
-		$this->CI->db->select('*, DATE_FORMAT(nshis_logs.cdate, "%M %e, %Y %l:%i %p") as log_date', FALSE);
+		$this->CI->db->select('*, nshis_logs.cdate as log_date', FALSE);
 		$this->CI->db->from('nshis_logs');
 		$this->CI->db->join('nshis_users', 'nshis_logs.user_id = nshis_users.ID');
 		
@@ -149,7 +149,7 @@ class Devicelog {
 	// --------------------------------------------------------------------
 	private function count_user_logs($user_id, $params = NULL)
 	{
-		$this->CI->db->select('*, DATE_FORMAT(nshis_logs.cdate, "%M %e, %Y %l:%i %p") as log_date', FALSE);
+		$this->CI->db->select('*, nshis_logs.cdate as log_date', FALSE);
 		$this->CI->db->from('nshis_logs');
 		$this->CI->db->join('nshis_users', 'nshis_logs.user_id = nshis_users.ID');
 		
@@ -637,7 +637,7 @@ class Devicelog {
 			echo '<div class="log_comments"><ul>';
 			
 			//get comments per log id
-			$this->CI->db->select('*, DATE_FORMAT(nshis_comments.cdate, "%M %e, %Y %l:%i %p") as comment_date');
+			$this->CI->db->select('*, nshis_comments.cdate as comment_date');
 			$this->CI->db->from('nshis_comments');
 			$this->CI->db->join('nshis_users', 'nshis_comments.user_id = nshis_users.ID');
 			$this->CI->db->where('nshis_comments.log_id', $row->log_id);

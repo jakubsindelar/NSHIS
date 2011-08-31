@@ -21,6 +21,7 @@ class Action extends CI_Controller {
 	
 	function viewall($device)
 	{
+		//$this->output->cache(3600);
 		$this->device = $device;
 		$this->load->view('template',array('page' => 'action/viewall', 'data' => array('device' => $device)));
 	}
