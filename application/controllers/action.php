@@ -129,7 +129,7 @@ class Action extends CI_Controller {
 			
 			if ($assign) {
 				$this->devicelog->insert_log($this->session->userdata('user_id'), $device_id, $device, 'assign', $this->input->post('location'));
-				//redirect('/action/view/'.$device.'/'.$device_id, 'refresh');
+				redirect('/action/view/'.$device.'/'.$device_id, 'refresh');
 			} else {
 				echo "Failed";
 			}
