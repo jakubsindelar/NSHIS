@@ -3,7 +3,7 @@
 						<div class="sectionBody">
 							<form action="" method="post">
 								<?php 
-									$this->deviceaction->assign($this->device, $this->device_id, $this->device_req);
+									$this->deviceaction->transfer($this->device, $this->device_id);
 								?>
 							</form>
 						</div>

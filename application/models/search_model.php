@@ -9,9 +9,9 @@ class Search_model extends CI_Model {
 	
   function search($item_type, $string)
   {
-    $this->db->like('name', $string);
+    $item_type == 'people' ? $this->db->like('concat(first_name,last_name)', $string) : $this->db->like('name', $string);
     
-    $query = $this->db->get('nshis_'.$item_type.'s');
+    $query = $item_type == 'people' ? $this->db->get('nshis_people') : $this->db->get('nshis_'.$item_type.'s');
     
     if($query)
     {

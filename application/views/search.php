@@ -17,6 +17,8 @@
 							'dialpad'	=>	'DIALPAD',
 							'connector'	=>	'CONNECTOR',
 							'headset'	=>	'HEADSET',
+							'usb_headset'	=>	'HEADSET(USB)',
+							'people'	=>	'HEADSET(USB) USER',
 							'ups'	=>	'UPS'
 						);
 						
@@ -86,7 +88,7 @@
                     }
                     echo "<tr $color><td>".($ctr+1)."</td>";
                     echo "<td width=150px>$item_type</td><td width=150px>";
-                    echo anchor($item_type.'/view/'.$row->$id,$row->name);
+                    echo $item_type == 'people' ? anchor('people/viewall/', $row->last_name.', '.$row->first_name) : anchor($item_type.'/view/'.$row->$id,$row->name);
                     // if ($row->cb_name)
                     // {
                     //   $cubicle_link = anchor('cubicle/view/'.$row->cubicle_id,$row->cb_name);

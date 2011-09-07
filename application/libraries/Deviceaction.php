@@ -451,8 +451,11 @@ class Deviceaction {
 	
 	// --------------------------------------------------------------------
 	
-	public function assign($device, $device_id)
+	public function assign($device, $device_id, $device_req = NULL)
 	{
+		//location label
+		$device_req = $device_req == NULL ? 'location' : $device_req;
+		
 		//get infos of the device
 		$query = $this->CI->db->get_where('nshis_'.$device.'s', array($device.'_id' => $device_id));
 		
@@ -461,10 +464,11 @@ class Deviceaction {
 			
 			//generate Available Cubicle Dropdown
 			$output = array('' => '');
-			$locations = $device == 'usb_headset' ? $this->get_avail_person() : $this->get_avail_cub($device);
+			$locations = $device == 'usb_headset' ? $this->get_avail_person() : ($device == 'cubicle' ? $this->get_avail_device($device_req) : $this->get_avail_cub($device));
 			foreach ($locations->result() as $location)
 			{
-				$location_id = $device == 'usb_headset' ? $location->id : $location->cubicle_id;
+				$device_req_id = $device_req.'_id';
+				$location_id = $device == 'usb_headset' ? $location->id :  ($device == 'cubicle' ? $location->$device_req_id : $location->cubicle_id);
 				$location_name = $device == 'usb_headset' ? $location->first_name . ' ' . $location->last_name : $location->name;
 				
 				$output[$location_id] = $location_name;
@@ -480,7 +484,7 @@ class Deviceaction {
 			//name
 			$this->CI->table->add_row(array('data' => strtoupper($device) . ' Name'), array('data' => '<input id="name" type="text" readonly="1" value="'.$info['name'].'" readonly="1" name="device_name">'));
 			//Avaiable Cubicles
-			$this->CI->table->add_row(array('data' => 'Location'), array('data' => form_dropdown('location', $output, NULL, 'id = "location" class="ui-widget-content ui-corner-all combobox"')));
+			$this->CI->table->add_row(array('data' => ucwords($device_req)), array('data' => form_dropdown('location', $output, NULL, 'id = "location" class="ui-widget-content ui-corner-all combobox"')));
 			//submit button
 			$this->CI->table->add_row(array('data' => ''), array('data' => '<input type="submit" value="Submit" name="submit_edit">'));
 			//validation errors
@@ -494,6 +498,9 @@ class Deviceaction {
 	
 	public function assign_save($device, $device_id, $params = array())
 	{
+		//get infos of the device
+		$query = $this->CI->db->get_where('nshis_'.$device.'s', array($device.'_id' => $device_id));
+		
 		$fields = array(
 			'flag_assigned' => 1
 		);
@@ -510,6 +517,187 @@ class Deviceaction {
 		
 		return FALSE;
 	}	
+	
+	// --------------------------------------------------------------------
+	
+	public function swap($device, $device_id)
+	{
+		//get infos of the device
+		$query = $this->CI->db->get_where('nshis_'.$device.'s', array($device.'_id' => $device_id));
+		
+		if ($query->num_rows() > 0) {
+			$info = $query->row_array();
+			
+			//generate Available Cubicle Dropdown
+			$output = array('' => '');
+			$locations = $this->get_avail_cub($device, "$device NOT IN (0, $device_id)");
+			foreach ($locations->result() as $location)
+			{
+				$location_id = $location->cubicle_id . '|' . $location->$device;
+				$location_name = $location->name . ' - ' . $this->get_device_name($device, $location->$device);
+				
+				$output[$location_id] = $location_name;
+			}
+			
+		//create table rows
+			//set table template
+			$tmpl = array (
+				'table_open' => '<table width="100%" border="0" cellspacing="0" cellpadding="10">'
+				);
+			$this->CI->table->set_template($tmpl);
+			
+			//name
+			$this->CI->table->add_row(array('data' => strtoupper($device) . ' Name'), array('data' => '<input id="name" type="text" readonly="1" value="'.$info['name'].'" readonly="1" name="device_name">'));
+			//Avaiable Cubicles
+			$this->CI->table->add_row(array('data' => 'Destination'), array('data' => form_dropdown('destination', $output, NULL, 'id = "location" class="ui-widget-content ui-corner-all combobox"')));
+			//submit button
+			$this->CI->table->add_row(array('data' => ''), array('data' => '<input type="submit" value="Submit" name="submit_edit">'));
+			//validation errors
+			$this->CI->table->add_row(array('data' => ''), array('data' => validation_errors()));
+			
+			echo $this->CI->table->generate();
+		}
+	}
+	
+	// --------------------------------------------------------------------
+	
+	public function swap_perform($device, $device_id, $cubicle_device_id)
+	{
+		$id = explode('|', $cubicle_device_id);
+		
+		$dest_cubicle = $id[0];
+		$dest_device = $id[1];
+		
+		$query = $this->CI->db->get_where('nshis_'.$device.'s', array($device.'_id' => $device_id));
+		foreach ($query->result() as $row)
+		{
+		    $source_cubicle = $row->cubicle_id;
+		    $source_device = $device_id;
+		}
+		
+		//assign cubicle 2 on main device
+		$data = array(
+        	'flag_assigned' => 1,
+            'cubicle_id' => $dest_cubicle
+        );
+            
+		$update1 = $this->CI->db->update('nshis_'.$device.'s', $data, array($device.'_id' => $source_device));
+		
+		//assign main cubicle on device 2
+		$data = array(
+        	'flag_assigned' => 1,
+            'cubicle_id' => $source_cubicle
+        );
+            
+		$update2 = $this->CI->db->update('nshis_'.$device.'s', $data, array($device.'_id' => $dest_device));
+		
+		//assign main cubicle on device 2
+		$data = array(
+        	$device => $dest_device
+        );
+            
+		$update3 = $this->CI->db->update('nshis_cubicles', $data, array('cubicle_id' => $source_cubicle));
+		
+		//assign cubicle 2 on main device
+		$data = array(
+        	$device => $source_device
+        );
+        
+		$update4 = $this->CI->db->update('nshis_cubicles', $data, array('cubicle_id' => $dest_cubicle));
+		
+		if ($update1 && $update2 && $update3 && $update4)
+		{
+			$this->CI->devicelog->insert_log($this->CI->session->userdata('user_id'), $device_id, $device, 'swap', $dest_cubicle, array('swap_device_id' => $dest_device, 'swap_cubicle_id' => $source_cubicle));
+			
+			return $dest_cubicle;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	// --------------------------------------------------------------------
+	
+	public function transfer($device, $device_id)
+	{
+		//get infos of the device
+		$query = $this->CI->db->get_where('nshis_'.$device.'s', array($device.'_id' => $device_id));
+		
+		if ($query->num_rows() > 0) {
+			$info = $query->row_array();
+			
+			//generate Available Cubicle Dropdown
+			$output = array('' => '');
+			$locations = $this->get_avail_cub($device, array($device.' >' => -1, $device.' !=' => $device_id));
+			foreach ($locations->result() as $location)
+			{
+				$location_id = $location->cubicle_id . '|' . $location->$device;
+				$location_name = $location->name . ' - ' . $this->get_device_name($device, $location->$device);
+				
+				$output[$location_id] = $location_name;
+			}
+			
+		//create table rows
+			//set table template
+			$tmpl = array (
+				'table_open' => '<table width="100%" border="0" cellspacing="0" cellpadding="10">'
+				);
+			$this->CI->table->set_template($tmpl);
+			
+			//name
+			$this->CI->table->add_row(array('data' => strtoupper($device) . ' Name'), array('data' => '<input id="name" type="text" readonly="1" value="'.$info['name'].'" readonly="1" name="device_name">'));
+			//Avaiable Cubicles
+			$this->CI->table->add_row(array('data' => 'Destination'), array('data' => form_dropdown('destination', $output, NULL, 'id = "location" class="ui-widget-content ui-corner-all combobox"')));
+			//submit button
+			$this->CI->table->add_row(array('data' => ''), array('data' => '<input type="submit" value="Submit" name="submit_edit">'));
+			//validation errors
+			$this->CI->table->add_row(array('data' => ''), array('data' => validation_errors()));
+			
+			echo $this->CI->table->generate();
+		}
+	}
+	
+	// --------------------------------------------------------------------
+	
+	public function transfer_perform($device, $device_id, $cubicle_device_id)
+	{
+		$id = explode('|', $cubicle_device_id);
+		
+		$dest_cubicle = $id[0];
+		$dest_device = $id[1];
+		
+		var_dump($dest_device);
+		
+		if ($dest_device) {
+			//pullout dest_device if assigned to cubicle
+			$this->pullout($device, $dest_device);
+		}
+		
+		//update cubicle_id of main device
+		$data = array(
+        	'flag_assigned' => 1,
+            'cubicle_id' => $dest_cubicle
+        );
+            
+		$update1 = $this->CI->db->update('nshis_'.$device.'s', $data, array($device.'_id' => $device_id));
+		
+		//update destination cubicle infos
+		$data = array(
+        	$device => $device_id
+        );
+            
+		$update2 = $this->CI->db->update('nshis_cubicles', $data, array('cubicle_id' => $dest_cubicle));
+		
+		if ($update1 && $update2)
+		{
+			return $dest_cubicle;
+		}
+		else 
+		{
+			return FALSE;
+		}
+	}
 	
 	// --------------------------------------------------------------------
 	
@@ -536,9 +724,37 @@ class Deviceaction {
 	
 	// --------------------------------------------------------------------
 	
-	private function get_avail_cub($device_type)
+	private function get_device_name($device, $device_id)
 	{
-		$query = $this->CI->db->get_where('nshis_cubicles', array($device_type => 0));
+		$query = $this->CI->db->get_where('nshis_'.$device.'s', array($device.'_id' => $device_id));
+		
+		if ($query->num_rows() > 0) {
+			$info = $query->row();
+			return $info->name;
+		}
+		else {
+			return FALSE;
+		}
+	}
+	
+	// --------------------------------------------------------------------
+	
+	private function get_avail_cub($device_type, $param = array())
+	{
+		if (count($param) > 0) {
+			$query = $this->CI->db->get_where('nshis_cubicles', $param);
+		} else {
+			$query = $this->CI->db->get_where('nshis_cubicles', array($device_type => 0));
+		}
+		
+		return $query;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	private function get_avail_device($device)
+	{
+		$query = $this->CI->db->get_where('nshis_'.$device.'s', array('flag_assigned' => 0, 'status' => 1));
 		
 		return $query;
 	}
