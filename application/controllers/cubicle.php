@@ -9,10 +9,6 @@ Class Cubicle extends CI_Controller {
 		$this->userCheck($this->session->userdata('is_logged'));
 
 		$this->load->model('Cubicle_model');
-
-		$this->load->model('Globals_model');
-		
-		$this->load->model('Stats_model');
 	}
 
 	function index()
@@ -50,35 +46,6 @@ Class Cubicle extends CI_Controller {
 
 	}
 
-	function edit($cubicle_id)
-	{
-		$this->form_validation->set_rules('cubicle_name', 'Cubicle Name', 'trim|required|xss_clean|callback_unique|alpha_numeric|min_length[4]|strtoupper');
-
-		if($this->form_validation->run() == FALSE)
-		{
-			$data = $this->Cubicle_model->get_cubicle_info($cubicle_id);
-			$this->load->view('template',array('page'=>'cubicle/edit', 'data' => $data));
-		}
-		else
-		{
-			$cubicle_name = $this->input->post('cubicle_name');
-				
-			$id = $this->Cubicle_model->edit_cubicle($cubicle_id, $cubicle_name);
-				
-			if($id)
-			{
-				$this->Stats_model->insert_log($this->session->userdata('user_id'), $id, 'cubicle', 'edit');
-
-				redirect('/cubicle/view/'.$id, 'refresh');
-			}
-			else
-			{
-				//			redirect('/user/register/', 'refresh');
-			}
-				
-		}
-	}
-
 	function delete()
 	{
 		if($_POST['my_device_id'] != '' || $_POST['my_device_id'] != NULL)
@@ -108,34 +75,6 @@ Class Cubicle extends CI_Controller {
 
 		$this->load->view('template',array('page'=>'cubicle/viewall', 'data'=>$data));
 
-	}
-
-	function comment($cubicle_id)
-	{
-		$this->form_validation->set_rules('cubicle_comment', 'Comment', 'trim|required|xss_clean');
-
-		if($this->form_validation->run() == FALSE)
-		{
-			$data = $this->Cubicle_model->get_cubicle_info($cubicle_id);
-			$this->load->view('template',array('page'=>'cubicle/comment', 'data' => $data));
-		}
-		else
-		{
-			$comment = $this->input->post('cubicle_comment');
-				
-			$id = $this->Cubicle_model->insert_comment($cubicle_id, $comment);
-				
-			if ($id)
-			{
-				$this->Stats_model->insert_log($this->session->userdata('user_id'), $id, 'cubicle', 'comment');
-
-				redirect('/cubicle/view/'.$id, 'refresh');
-			}
-			else
-			{
-
-			}
-		}
 	}
 
 	function unique($cubicle_name)

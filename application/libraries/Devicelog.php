@@ -116,7 +116,7 @@ class Devicelog {
 		$page = ($this->CI->uri->segment(4))? $this->CI->uri->segment(4) : 0; //check if its on the first page
 		
 		
-		$this->CI->db->select('*, DATE_FORMAT(nshis_logs.cdate, "%M %e, %Y %l:%i %p") as log_date', FALSE);
+		$this->CI->db->select('*, nshis_logs.cdate as log_date', FALSE);
 		$this->CI->db->from('nshis_logs');
 		$this->CI->db->join('nshis_users', 'nshis_logs.user_id = nshis_users.ID');
 		
@@ -237,7 +237,6 @@ class Devicelog {
 					}
 					
 					$("#log_filter_status input").click(function(){
-						alert("test");
 						submit_data();
 					}); 
 					
@@ -375,7 +374,7 @@ class Devicelog {
 				echo '<div class="log_comments"><ul>';
 				
 				//get comments per log id
-				$this->CI->db->select('*, DATE_FORMAT(nshis_comments.cdate, "%M %e, %Y %l:%i %p") as comment_date');
+				$this->CI->db->select('*, nshis_comments.cdate as comment_date');
 				$this->CI->db->from('nshis_comments');
 				$this->CI->db->join('nshis_users', 'nshis_comments.user_id = nshis_users.ID');
 				$this->CI->db->where('nshis_comments.log_id', $row->log_id);

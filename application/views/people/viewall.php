@@ -1,9 +1,12 @@
 					<script type="text/javascript">
 						$(document).ready(function() {
+							$(".tablesorter").tablesorter(); //make table sortable
+							
 							var base_url = "<?php echo base_url(); ?>";
 							var _user_id = 0;
 							var _headset_id = 0;
-							
+
+
 							$( ".assign-headset" )
 								.button()
 								.click(function() {
@@ -54,6 +57,33 @@
 							
 						});
 					</script>
+					<div class="section width600" >
+						<div class="sectionHeader">View All Users</div>
+						<div class="sectionBody">
+							<table width="100%" cellspacing="0" border="0" class="tablesorter">
+								<thead>
+									<tr><th>#</th><th>FULL NAME</th><th>ASSIGNED HEADSET</th><th></th></tr>
+								</thead>
+								<tbody>
+								<?php $ctr = 0; ?>
+								<?php foreach ($data->result() as $row):?>
+								<tr id="<?php echo $row->first_name.' '.$row->last_name;?>">
+									<td><?php echo ++$ctr; ?></td>
+									<td><?php echo $row->last_name.', '.$row->first_name;?></td>
+									<td><?php echo $row->usb_headset_id != 0 ? anchor('/usb_headset/view/'.$row->usb_headset_id, $row->name) : ''; ?></td>
+									<td>
+										<?php if($row->usb_headset_id == 0) :?>
+											<a class="assign-headset" id="<?php echo $row->id; ?>" name="<?php echo $row->first_name.' '.$row->last_name;?>">assign</a>
+										<?php else: ?>
+											<a class="unassign-headset" href="<?php echo base_url(); ?>usb_headset/unassign/<?php echo $row->usb_headset_id; ?>" >unassign</a>
+										<?php endif;?>
+									</td>
+								</tr>
+								<?php endforeach;?>
+								</tbody>
+							</table>
+						</div>
+					</div>
 					<div id="dialog-form" title="Assign Headset">
 						<p class="validateTips"><strong>Select from available headsets</strong></p>
 						<form>
@@ -73,27 +103,4 @@
 								</tr>
 							</table>
 						</form>
-					</div>
-					<div class="section width600" >
-						<div class="sectionHeader">View All Users</div>
-						<div class="sectionBody">
-							<table width="100%" border="0" cellpadding="0" id="latestStatusTable">
-								<tr class="latestStatusTableHeader"><td>#</td><td>FULL NAME</td><td>ASSIGNED HEADSET</td><td></td></tr>
-								<?php $ctr = 0; ?>
-								<?php foreach ($data->result() as $row):?>
-								<tr id="<?php echo $row->first_name.' '.$row->last_name;?>">
-									<td><?php echo ++$ctr; ?></td>
-									<td><?php echo $row->last_name.', '.$row->first_name;?></td>
-									<td><?php echo $row->usb_headset_id != 0 ? anchor('/usb_headset/view/'.$row->usb_headset_id, $row->name) : ''; ?></td>
-									<td>
-										<?php if($row->usb_headset_id == 0) :?>
-											<a class="assign-headset" id="<?php echo $row->id; ?>" name="<?php echo $row->first_name.' '.$row->last_name;?>">assign</a>
-										<?php else: ?>
-											<a class="unassign-headset" href="<?php echo base_url(); ?>usb_headset/unassign/<?php echo $row->usb_headset_id; ?>" >unassign</a>
-										<?php endif;?>
-									</td>
-								</tr>
-								<?php endforeach;?>
-							</table>
-						</div>
 					</div>

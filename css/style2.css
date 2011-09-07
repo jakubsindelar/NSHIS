@@ -10,6 +10,11 @@ a{
 	font-weight:800;
 }
 
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
 
 #content{
 	width:100%;

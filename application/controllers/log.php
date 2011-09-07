@@ -9,8 +9,6 @@ class Log extends CI_Controller {
 		$this->userCheck($this->session->userdata('is_logged'));
 
 		$this->load->model('Cubicle_model');
-
-		$this->load->model('Globals_model');
 	}
 
 	function daily($sdate_unix = NULL)
