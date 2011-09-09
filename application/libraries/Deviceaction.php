@@ -667,7 +667,12 @@ class Deviceaction {
 		$dest_cubicle = $id[0];
 		$dest_device = $id[1];
 		
-		var_dump($dest_device);
+		//reset main cubicle if main device was assigned
+		$query = $this->CI->db->get_where('nshis_'.$device.'s', array($device.'_id' => $device_id));
+		$row = $query->row();
+		$cubicle_id = $row->cubicle_id;
+		if ($cubicle_id != 0)
+			$update = $this->CI->db->update('nshis_cubicles', array($device => 0), array('cubicle_id' => $cubicle_id));
 		
 		if ($dest_device) {
 			//pullout dest_device if assigned to cubicle
