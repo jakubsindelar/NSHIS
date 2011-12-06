@@ -10,7 +10,7 @@ class Usb_headset extends CI_Controller {
 
 		$this->load->model('Stats_model');
 
-		$this->load->model('Globals_model');
+		//$this->load->model('Globals_model');
 
 		$this->load->library('devicelog');
 		
