@@ -7,7 +7,7 @@
 					});
 					</script>
 					<div class="section width600" >
-						<div class="sectionHeader">Cubicle <?php echo $row->name;?> Info</div>
+						<div class="sectionHeader">Cubicless <?php echo $row->name;?> Info</div>
 						<div class="sectionBody">
 							<table width="100%" border="0" cellpadding="5" cellspacing="0" id="cubicle_table">
 								<tr>
@@ -36,6 +36,9 @@
 								</tr>
 								<tr>
 									<td id="resultName">UPS</td><td><?php echo anchor('ups/view/'.$row->ups_id, $row->ups_name.' ', 'title="View"');?></td><td class="cubLink"><?php echo anchor('action/assign/cubicle/'.$row->cubicle_id.'/ups', 'assign', 'title="Assign new item"'); echo isset($row->ups_id) ? anchor('action/transfer/ups/'.$row->ups_id,'transfer', 'title="Transfer this item to another cubicle"').anchor('action/swap/ups/'.$row->ups_id, 'swap', 'title="Swap this item from other cubicle"').anchor('action/pullout/ups/'.$row->ups_id, 'pullout', 'title="Pullout this item on this cubicle"') : '';?></td>
+								</tr>
+								<tr>
+									<td id="resultName">USB</td><td><?php echo anchor('usb/view/'.$row->usb_id, $row->usb_name.' ', 'title="View"');?></td><td class="cubLink"><?php echo anchor('action/assign/cubicle/'.$row->cubicle_id.'/usb', 'assign', 'title="Assign new item"'); echo isset($row->usb_id) ? anchor('action/transfer/usb/'.$row->usb_id,'transfer', 'title="Transfer this item to another cubicle"').anchor('action/swap/usb/'.$row->usb_id, 'swap', 'title="Swap this item from other cubicle"').anchor('action/pullout/usb/'.$row->usb_id, 'pullout', 'title="Pullout this item on this cubicle"') : '';?></td>
 								</tr>
 								<!--<tr>
 									<td id="resultName">Date Added</td><td><?php echo $row->cdate;?></td><td>&nbsp;</td>

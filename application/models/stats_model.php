@@ -56,9 +56,9 @@ class Stats_model extends CI_Model {
 			    (select count(*) from nshis_headsets) as total_hst,
 			    (select \'Headset(USB)\') as name_usbhst,
 			    (select count(*) from nshis_usb_headsets where flag_assigned=0) as unassigned_usbhst,
-          (select count(*) from nshis_usb_headsets where flag_assigned=1) as assigned_usbhst,
-          (select count(*) from nshis_usb_headsets) as total_usbhst,
-          (select \'Headset(Analog)\') as name_hst,
+	            (select count(*) from nshis_usb_headsets where flag_assigned=1) as assigned_usbhst,
+	            (select count(*) from nshis_usb_headsets) as total_usbhst,
+	            (select \'Headset(Analog)\') as name_hst,
 			    (select count(*) from nshis_upss where flag_assigned=0) as unassigned_ups,
 			    (select count(*) from nshis_upss where flag_assigned=1) as assigned_ups,
 			    (select count(*) from nshis_upss) as total_ups,
@@ -112,8 +112,7 @@ class Stats_model extends CI_Model {
 	
 	function hardware_summary()
 	{
-		$hardwares = array('keyboard', 'mouse', 'cpu', 'monitor', 'dialpad', 'connector', 'headset', 'ups', 'usb_headset');
-		
+		$hardwares = array('keyboard', 'mouse', 'cpu', 'monitor', 'dialpad', 'connector', 'headset', 'ups', 'usb_headset', 'usb');
 		
 		echo '
 			<script type="text/javascript">

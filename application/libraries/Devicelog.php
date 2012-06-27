@@ -591,7 +591,7 @@ class Devicelog {
 				//ignore preposition where delete cubicle
 				$preposition = '';
 			} 
-			elseif ($row->process == 'swap' && @$row->swap_cubicle_id != '') {
+			elseif ($row->process == 'swap' && $row->swap_cubicle_id != '') {
 				$preposition = 'with';
 			}
 			else {
@@ -617,7 +617,7 @@ class Devicelog {
 			echo '
 				<ul>
 					<li>';
-			if ($row->process == 'swap' && @$row->swap_cubicle_id != '') {
+			if ($row->process == 'swap' && $row->swap_cubicle_id != '') {
 				echo '<strong>'.anchor('log/user/'.$row->user_id,strtoupper($row->username)).'</strong>'.' '.$operation.' '.anchor($row->device.'/view/'.$row->device_id, $row->device.' ['.$row->device_name.']').'/'.anchor('cubicle/view/'.$row->cubicle_id, '['.$row->cubicle_name.']').' '.$preposition.' '.anchor($row->device.'/view/'.$row->swap_device_id, $row->device.' ['.$this->get_device_name($row->swap_device_id, $row->device).']').'/'.anchor('cubicle/view/'.$row->swap_cubicle_id, '['.$this->get_device_name($row->swap_cubicle_id, 'cubicle').']');
 			} 
 			else {

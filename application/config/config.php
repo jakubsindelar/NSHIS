@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://localhost/NSHIS';
+$config['base_url']	= 'http://localhost/it/NSHIS';
 
 /*
 |--------------------------------------------------------------------------
@@ -375,7 +375,7 @@ $config['enable_profiling'] = TRUE;
 |Turn debugging on or off
 |
 */
-$config['version'] = 'v2.0.11';
+$config['version'] = 'v2.0.2';
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */

@@ -1,16 +1,16 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /NSHIS/
+    RewriteBase /it/NSHIS/
 
     
-    #Redirect all view device except for cubicle and action to /NSHIS/action/[action]/[device]/[device id]
-	RedirectMatch ^.*\/((?!action|cubicle)[a-zA-Z_]{1,20})\/(view|edit)\/([0-9]{1,20})$ /NSHIS/action/$2/$1/$3
+    #Redirect all view device except for cubicle and action to /it/NSHIS/action/[action]/[device]/[device id]
+	RedirectMatch ^.*\/((?!action|cubicle)[a-zA-Z_]{1,20})\/(view|edit)\/([0-9]{1,20})$ /it/NSHIS/action/$2/$1/$3
 	
-	#Redirect all add device except for cubicle and action to /NSHIS/action/add/[device]
-	RedirectMatch ^.*\/((?!action|cubicle|people)[a-zA-Z_]{1,20})\/add.*$ /NSHIS/action/add/$1
+	#Redirect all add device except for cubicle and action to /it/NSHIS/action/add/[device]
+	RedirectMatch ^.*\/((?!action|cubicle|people)[a-zA-Z_]{1,20})\/add.*$ /it/NSHIS/action/add/$1
 	
-	#Redirect all viewall action to /NSHIS/action/viewall/[device]
-	RedirectMatch ^.*\/((?!action|people)[a-zA-Z_]{1,20})\/viewall.*$ /NSHIS/action/viewall/$1
+	#Redirect all viewall action to /it/NSHIS/action/viewall/[device]
+	RedirectMatch ^.*\/((?!action|people)[a-zA-Z_]{1,20})\/viewall.*$ /it/NSHIS/action/viewall/$1
 
     #Removes access to the system folder by users.
     #Additionally this will allow you to create a System.php controller,

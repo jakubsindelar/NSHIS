@@ -107,7 +107,8 @@ class Cubicle_model extends CI_Model {
 				f.dialpad_id, f.name as dlp_name,
 				g.connector_id, g.name as con_name,
 				h.headset_id, h.name as hst_name,
-				i.ups_id, i.name as ups_name
+				i.ups_id, i.name as ups_name,
+				j.usb_id, j.name as usb_name
 			FROM nshis_cubicles AS a 
 				LEFT JOIN nshis_keyboards AS b ON a.keyboard = b.keyboard_id 
 				LEFT JOIN nshis_mouses AS c ON a.mouse = c.mouse_id 
@@ -117,6 +118,7 @@ class Cubicle_model extends CI_Model {
 				LEFT JOIN nshis_connectors AS g ON a.connector = g.connector_id
 				LEFT JOIN nshis_headsets AS h ON a.headset = h.headset_id
 				LEFT JOIN nshis_upss AS i ON a.ups = i.ups_id
+				LEFT JOIN nshis_usbs AS j ON a.usb = j.usb_id
 			WHERE a.cubicle_id = ? 
 			LIMIT 1";
 		

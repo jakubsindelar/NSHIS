@@ -19,7 +19,8 @@
 							'headset'	=>	'HEADSET',
 							'usb_headset'	=>	'HEADSET(USB)',
 							'people'	=>	'HEADSET(USB) USER',
-							'ups'	=>	'UPS'
+							'ups'	=>	'UPS',
+							'usb'	=>	'USB'
 						);
 						
 						$submit = array(

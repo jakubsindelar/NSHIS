@@ -19,6 +19,7 @@
 					<li><a href="<?php echo base_url();?>usb_headset/add">Headset(USB)</a></li>
 					<li><a href="<?php echo base_url();?>people/add">Headset(USB) Users</a></li>
 					<li><a href="<?php echo base_url();?>ups/add">UPS</a></li>
+					<li><a href="<?php echo base_url();?>usb/add">USB</a></li>
 				</ul>
 			</li>
 			<li><a href="#">View All</a>
@@ -34,6 +35,7 @@
 					<li><a href="<?php echo base_url();?>usb_headset/viewall">Headset(USB)</a></li>
 					<li><a href="<?php echo base_url();?>people/viewall">Headset(USB) Users</a></li>
 					<li><a href="<?php echo base_url();?>ups/viewall">UPS</a></li>
+					<li><a href="<?php echo base_url();?>usb/viewall">USB</a></li>
 				</ul>
 			</li>
 			<li><a href="<?php echo base_url(); ?>user/logout/">Logout</a></li>
